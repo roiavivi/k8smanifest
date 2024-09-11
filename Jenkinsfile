@@ -15,10 +15,9 @@ pipeline {
             withCredentials([usernamePassword(credentialsId: 'GITHUB', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
               sh "git config user.email 'roie710@gmail.com'"
               sh "git config user.name 'roie710'"
-              sh "cd manifasts/"
-              sh "cat deployment.yaml"
-              sh "sed -i 's+roie710/app.*+roie710/app:${params.BUILD_NUMBER}+g' deployment.yaml"
-              sh "cat deployment.yaml"
+              sh "cat manifasts/deployment.yaml"
+              sh "sed -i 's+roie710/app.*+roie710/app:${params.BUILD_NUMBER}+g' manifasts/deployment.yaml"
+              sh "cat manifasts/deployment.yaml"
               sh "git add ."
               sh "git commit -m 'Done by Jenkins Job changemanifest: ${params.BUILD_NUMBER}'"
               sh '''
