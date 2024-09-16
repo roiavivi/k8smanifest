@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://charts.jenkins.io
     chart: jenkins
-    targetRevision: 3.5.7 # Replace with the desired version of the Jenkins chart
+    targetRevision: 5.5.10 # Replace with the desired version of the Jenkins chart
     helm:
       valueFiles:
         - values.yaml
