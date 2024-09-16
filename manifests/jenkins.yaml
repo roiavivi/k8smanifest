@@ -6,15 +6,17 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  destination:
-    name: ''
-    namespace: jenkins
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: ./
-    repoURL: 'https://charts.jenkins.io'
-    targetRevision: HEAD
   project: default
+  source:
+    repoURL: https://charts.jenkins.io
+    chart: jenkins
+    targetRevision: 3.5.7 # Replace with the desired version of the Jenkins chart
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jenkins
   syncPolicy:
     automated:
       prune: true
