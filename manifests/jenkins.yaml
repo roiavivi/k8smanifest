@@ -109,6 +109,8 @@ spec:
               alb.ingress.kubernetes.io/ssl-redirect: '443'
               external-dns.alpha.kubernetes.io/hostname: jenkins.roiavivi.com
             ingressClassName: alb
+            hostName: jenkins.roiavivi.com
+            resourceRootUrl: jenkins.roiavivi.com
             path: /
             labels: {}
             tls:
