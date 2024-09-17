@@ -1,27 +1,28 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: jenkins  # Replace with your application name
+  name: jenkins
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
-  source:
-    repoURL: https://charts.jenkins.io
-    chart: jenkins
-    targetRevision: 5.5.10  # Replace with the desired version of the Jenkins chart
-    helm:
-      valueFiles:
-        - $values/manifests/jenkins-values.yaml
   destination:
-    server: https://kubernetes.default.svc
-    namespace: jenkins  # Replace with your target namespace
+    namespace: jenkins
+    name: jenkins
+  project: default
+  sources:
+    # Chart from Chart Repo
+    - chart: jenkins
+      repoURL: https://charts.jenkins.io
+      targetRevision: 5.5.10
+      helm:
+        valueFiles:
+        - $values/manifests/jenkins-values.yaml
+    # Values from Git
+    - repoURL: 'https://github.com/roiavivi/k8smanifest.git'
+      targetRevision: HEAD
+      ref: values
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - PrunePropagationPolicy=foreground
-      - PruneLast=true
