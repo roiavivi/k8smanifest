@@ -12,6 +12,23 @@ spec:
     helm:
       values: |
         controller:
+          installPlugins:
+            - kubernetes:4285.v50ed5f624918
+            - workflow-aggregator:600.vb_57cdd26fdd7
+            - git:5.4.1
+            - configuration-as-code:1850.va_a_8c31d3158b_
+            - aws-credentials:231.v08a_59f17d742
+            - pipeline-aws:1.45
+            - pipeline-stage-view:2.34
+            - docker-plugin:1.6.2
+            - docker-workflow:580.vc0c340686b_54
+            - docker-commons:443.v921729d5611d
+            - docker-java-api:3.3.6-90.ve7c5c7535ddd
+            - nodejs:1.6.2
+            - dependency-check-jenkins-plugin:5.5.1
+            - sonar:2.17.2
+            - github:1.40.0
+            - job-dsl:1.89
           ingress:
             enabled: true
             paths:
