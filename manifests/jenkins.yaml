@@ -12,8 +12,26 @@ spec:
     chart: jenkins
     targetRevision: 5.5.10 # Replace with the desired version of the Jenkins chart
     helm:
-      values:
-        - values.yaml
+      values: |
+        ingress:
+          enabled: true
+          path: /
+          hosts:
+            - jenkins.roiavivi.com
+          annotations:
+            kubernetes.io/ingress.class: alb
+            alb.ingress.kubernetes.io/scheme: internet-facing
+            alb.ingress.kubernetes.io/target-type: ip
+            alb.ingress.kubernetes.io/tags: "Project=myproject,Environment=dev"
+            alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+            alb.ingress.kubernetes.io/ssl-redirect: '443'
+            #alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:573184145168:certificate/0cd07f01-1ddc-4d30-b4bb-b0277fb8c3c3
+            external-dns.alpha.kubernetes.io/hostname: jenkins.roiavivi.com
+          labels: {}
+          tls:
+            - secretName: jenkins-tls
+              hosts:
+                - jenkins.roiavivi.com
   destination:
     server: https://kubernetes.default.svc
     namespace: jenkins
