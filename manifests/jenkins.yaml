@@ -19,7 +19,7 @@ spec:
         valueFiles:
         - $values/manifests/jenkins-values.yaml
     # Values from Git
-    - repoURL: 'https://github.com/roiavivi/k8smanifest.git'
+    - repoURL: 'https://github.com/roiavivi/k8smanifest'
       targetRevision: HEAD
       ref: values
   syncPolicy:
