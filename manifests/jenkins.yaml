@@ -1,29 +1,53 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: jenkins
-  namespace: jenkins
-  annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/tags: "Project=myproject,Environment=dev"
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
-    alb.ingress.kubernetes.io/ssl-redirect: '443'
-    external-dns.alpha.kubernetes.io/hostname: jenkins.roiavivi.com
+  name: jenkins  # Replace with your application name
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
-  rules:
-    - host: jenkins.roiavivi.com
-      http:
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: jenkins
-                port:
-                  number: 8080
-  tls:
-    - secretName: jenkins-tls
-      hosts:
-        - jenkins.roiavivi.com
+  project: default
+  source:
+    repoURL: https://charts.jenkins.io
+    chart: jenkins
+    targetRevision: 5.5.10  # Replace with the desired version of the Jenkins chart
+    helm:
+      values: |
+        ingress:
+          enabled: true
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+              backend:
+                service:
+                  name: jenkins  # Replace with your service name
+                  port:
+                    number: 8080
+          apiVersion: "networking.k8s.io/v1"
+          hosts:
+            - jenkins.roiavivi.com
+          annotations:
+            kubernetes.io/ingress.class: alb
+            alb.ingress.kubernetes.io/scheme: internet-facing
+            alb.ingress.kubernetes.io/target-type: ip
+            alb.ingress.kubernetes.io/tags: "Project=myproject,Environment=dev"
+            alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+            alb.ingress.kubernetes.io/ssl-redirect: '443'
+            # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:573184145168:certificate/0cd07f01-1ddc-4d30-b4bb-b0277fb8c3c3  # Uncomment and replace with your certificate ARN if needed
+            external-dns.alpha.kubernetes.io/hostname: jenkins.roiavivi.com
+          labels: {}
+          tls:
+            - secretName: jenkins-tls  # Replace with your TLS secret name
+              hosts:
+                - jenkins.roiavivi.com
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jenkins  # Replace with your target namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
