@@ -11,9 +11,9 @@ spec:
     repoURL: https://charts.jenkins.io
     chart: jenkins
     targetRevision: 5.5.10 # Replace with the desired version of the Jenkins chart
-    helm:
-      valueFiles:
-        - values.yaml
+    # helm:
+    #   valueFiles:
+    #     - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: jenkins
