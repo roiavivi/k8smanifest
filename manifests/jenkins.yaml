@@ -12,6 +12,64 @@ spec:
     helm:
       values: |
         controller:
+          JCasC:
+            configScripts:
+              seed-jobs: |
+                security:
+                  # disable if you want to skip manual approval for the scripts used in seed-jobs
+                  globalJobDslSecurityConfiguration:
+                    useScriptSecurity: false
+                jobs:
+                  # APP-CI
+                  - script: >
+                      pipelineJob('CI-DSL') {
+                        displayName('CI-DSL')
+        
+                        // any other properties you want, like triggers, number of runs to keep, etc
+        
+                        definition {
+                          cpsScm {
+                            scm {
+                              // point to your own repo where your root seed-job pipeline is defined
+                              git {
+                                remote {
+                                  url('https://github.com/roiavivi/AppCode.git')
+                                  credentials('GITHUB')
+                                }
+                                branches('*/main')
+                              }
+                            }
+                            scriptPath('Jenkinsfile')
+                          }
+                        }
+                      }
+                  # Queue a run of the root seed job as part of CasC
+                  - script: queue('CI-DSL')
+        
+                  # APP-CD
+                  - script: >
+                      pipelineJob('CD-DSL') {
+                        displayName('CD-DSL')
+        
+                        // Any other properties you want, like triggers, number of runs to keep, etc.
+        
+                        definition {
+                          cpsScm {
+                            scm {
+                              // Point to your own repo where your second root seed-job pipeline is defined
+                              git {
+                                remote {
+                                  url('https://github.com/roiavivi/k8smanifest.git')
+                                  credentials('GITHUB')
+                                }
+                                branches('*/main')
+                              }
+                            }
+                            scriptPath('Jenkinsfile')
+                          }
+                        }
+                      }
+
           installPlugins:
             - kubernetes:4285.v50ed5f624918
             - workflow-aggregator:600.vb_57cdd26fdd7
