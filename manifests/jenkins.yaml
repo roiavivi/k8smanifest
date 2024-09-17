@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: jenkins
+  name: jenkins  # Replace with your application name
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://charts.jenkins.io
     chart: jenkins
-    targetRevision: 5.5.10 # Replace with the desired version of the Jenkins chart
+    targetRevision: 5.5.10
     helm:
       values: |
         ingress:
@@ -23,7 +23,7 @@ spec:
                   name: jenkins
                   port:
                     number: 8080
-          apiVersion: "networking.k8s.io/v1"          
+          apiVersion: "networking.k8s.io/v1"
           hosts:
             - jenkins.roiavivi.com
           annotations:
@@ -33,7 +33,6 @@ spec:
             alb.ingress.kubernetes.io/tags: "Project=myproject,Environment=dev"
             alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
             alb.ingress.kubernetes.io/ssl-redirect: '443'
-            #alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:573184145168:certificate/0cd07f01-1ddc-4d30-b4bb-b0277fb8c3c3
             external-dns.alpha.kubernetes.io/hostname: jenkins.roiavivi.com
           labels: {}
           tls:
@@ -42,7 +41,7 @@ spec:
                 - jenkins.roiavivi.com
   destination:
     server: https://kubernetes.default.svc
-    namespace: jenkins
+    namespace: jenkins  # Replace with your target namespace
   syncPolicy:
     automated:
       prune: true
