@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sonarqube  # Replace with your application name
+  name: sonarqube  ## Replace with your application name
   namespace: argocd
 spec:
   project: default
