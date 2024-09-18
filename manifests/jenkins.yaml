@@ -26,6 +26,10 @@ spec:
                         displayName('CI-DSL')
         
                         // any other properties you want, like triggers, number of runs to keep, etc
+                        
+                        triggers {
+                          githubPush()
+                        }
         
                         definition {
                           cpsScm {
