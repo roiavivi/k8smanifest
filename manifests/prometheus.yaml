@@ -1,8 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  annotations:
-    argocd.argoproj.io/sync-options: Replace=true
   name: monitoring  ## Replace with your application name
   namespace: argocd
 spec:
