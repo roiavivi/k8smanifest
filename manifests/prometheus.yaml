@@ -1,24 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monitoring
+  name: monitoring  ## Replace with your application name
   namespace: argocd
 spec:
-  destination:
-    name: ''
-    namespace: monitoring
-    server: https://kubernetes.default.svc
-  source:
-    path: ''
-    repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 62.6.0
-    chart: prometheus-community/kube-prometheus-stack
-  sources: []
   project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 31.0.0  # Replace with the desired version of the Jenkins char
+    chart: kube-prometheus-stack
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring  # Replace with your target namespace
   syncPolicy:
     automated:
       prune: true
-      replace: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
