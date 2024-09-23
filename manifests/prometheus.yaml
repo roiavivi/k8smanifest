@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: latest  # Replace with the desired version of the Jenkins char
+    targetRevision: 62.7.0  # Replace with the desired version of the Jenkins char
     chart: kube-prometheus-stack
     helm:
       values: |
