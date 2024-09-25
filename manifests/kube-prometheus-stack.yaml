@@ -9,54 +9,6 @@ spec:
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
     targetRevision: 62.7.0
-    helm:
-      values: |
-        grafana:
-          ingress:
-            ## If true, Grafana Ingress will be created
-            ##
-            enabled: true
-        
-            ## IngressClassName for Grafana Ingress.
-            ## Should be provided if Ingress is enable.
-            ##
-            ingressClassName: nginx
-        
-            ## Annotations for Grafana Ingress
-            ##
-            annotations:
-              cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-        
-            ## Labels to be added to the Ingress
-            ##
-            labels: {}
-        
-            ## Hostnames.
-            ## Must be provided if Ingress is enable.
-            ##
-            hosts:
-              - grafana.roiavivi.com
-        
-            ## Path for grafana ingress
-            path: /grafana
-        
-            ## TLS configuration for grafana Ingress
-            ## Secret must be manually created in the namespace
-            ##
-            tls:
-              - secretName: "grafana-tls-key"
-                hosts:
-                - grafana.roiavivi.com
-        
-          grafana.ini:
-            security:
-              cookie_secure: false
-            server:
-              domain: grafana.roiavivi.com
-              protocol: http
-              http_port: 80
-              root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
-              serve_from_sub_path: true
   destination:
     namespace: monitoring
     server: https://kubernetes.default.svc
