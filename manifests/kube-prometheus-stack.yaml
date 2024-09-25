@@ -14,8 +14,6 @@ spec:
         grafana:
           ingress:
             enabled: true
-            annotations:
-              cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
             labels: {}
             hosts:
               - monitor.roiavivi.com
