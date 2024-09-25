@@ -11,21 +11,28 @@ spec:
     targetRevision: 62.7.0
     helm:
       values: |
-        ingress:
-          enabled: true
-          annotations:
-            nginx.ingress.kubernetes.io/rewrite-target: /
-            nginx.ingress.kubernetes.io/ssl-redirect: "true"
-            cert-manager.io/cluster-issuer: "letsencrypt-prod" # Optional: If using cert-manager for SSL
-          hosts:
-            - host: monitor.roiavivi.com
-              paths:
-                - path: /
-                  pathType: Prefix
-          tls:
-            - hosts:
-                - monitor.roiavivi.com
-              secretName: monitor-tls # Optional: If using TLS
+        grafana:
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+              cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+            labels: {}
+            hosts:
+              - monitor.roiavivi.com
+            path: /grafana
+            tls:
+              - secretName: "grafana-tls-key"
+                hosts:
+                  - monitor.roiavivi.com
+          grafana.ini:
+            security:
+              cookie_secure: false
+            server:
+              domain: monitor.roiavivi.com
+              protocol: http
+              root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+              serve_from_sub_path: true
   destination:
     namespace: monitoring
     server: https://kubernetes.default.svc
