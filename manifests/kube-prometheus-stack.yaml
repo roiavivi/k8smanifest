@@ -9,6 +9,23 @@ spec:
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
     targetRevision: 62.7.0
+    helm:
+      values: |
+        ingress:
+          enabled: true
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+            nginx.ingress.kubernetes.io/ssl-redirect: "true"
+            cert-manager.io/cluster-issuer: "letsencrypt-prod" # Optional: If using cert-manager for SSL
+          hosts:
+            - host: monitor.roiavivi.com
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - hosts:
+                - monitor.roiavivi.com
+              secretName: monitor-tls # Optional: If using TLS
   destination:
     namespace: monitoring
     server: https://kubernetes.default.svc
