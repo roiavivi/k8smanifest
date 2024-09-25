@@ -13,33 +13,50 @@ spec:
       values: |
         grafana:
           ingress:
+            ## If true, Grafana Ingress will be created
+            ##
             enabled: true
-            # Used to create an Ingress record.
-            hosts:
-              - name: monitoring.roiavivi.com
-                path: /
-                pathType: Prefix
+        
+            ## IngressClassName for Grafana Ingress.
+            ## Should be provided if Ingress is enable.
+            ##
+            ingressClassName: nginx
+        
+            ## Annotations for Grafana Ingress
+            ##
             annotations:
-              kubernetes.io/ingress.class: "alb"
-              alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
-              alb.ingress.kubernetes.io/ssl-redirect: '443'
-              alb.ingress.kubernetes.io/target-group-attributes: 'stickiness.enabled=true,stickiness.lb_cookie.duration_seconds=86400'
-              alb.ingress.kubernetes.io/target-type: ip
-              alb.ingress.kubernetes.io/scheme: internet-facing
-              alb.ingress.kubernetes.io/healthcheck-path: /health
-              alb.ingress.kubernetes.io/healthcheck-port: traffic-port
-              alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-              alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
-              alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
-              alb.ingress.kubernetes.io/healthy-threshold-count: '2'
-              alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
-              alb.ingress.kubernetes.io/load-balancer-attributes: 'idle_timeout.timeout_seconds=60'
-            ingressClassName: alb
-          
+              cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+        
+            ## Labels to be added to the Ingress
+            ##
+            labels: {}
+        
+            ## Hostnames.
+            ## Must be provided if Ingress is enable.
+            ##
+            hosts:
+              - grafana.roiavivi.com
+        
+            ## Path for grafana ingress
+            path: /grafana
+        
+            ## TLS configuration for grafana Ingress
+            ## Secret must be manually created in the namespace
+            ##
             tls:
-              - secretName: monitoring-tls
+              - secretName: "grafana-tls-key"
                 hosts:
-                  - monitoring.roiavivi.com
+                - grafana.roiavivi.com
+        
+          grafana.ini:
+            security:
+              cookie_secure: false
+            server:
+              domain: grafana.roiavivi.com
+              protocol: http
+              http_port: 80
+              root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+              serve_from_sub_path: true
   destination:
     namespace: monitoring
     server: https://kubernetes.default.svc
