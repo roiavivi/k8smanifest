@@ -18,6 +18,14 @@ spec:
       values: |-
         ingress:
           enabled: true
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+              backend:
+                service:
+                  name: kube-prometheus-stack-grafana  # Replace with your service name
+                  port:
+                    number: 80
           # Used to create an Ingress record.
           hosts:
             - name: monitoring.roiavivi.com
