@@ -1,23 +1,26 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kube-prometheus-stack
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
+  name: monitoring
+  namespace: argocd
 spec:
-  destination:
-    name: in-cluster
-    namespace: monitoring
   project: default
   source:
-    repoURL: 'https://prometheus-community.github.io/helm-charts'
-    targetRevision: 62.7.0
-    helm:
-      skipCrds: true
-      values: |-
-        #Snip the values
     chart: kube-prometheus-stack
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 41.6.1
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true
+  ignoreDifferences:
+  - group: monitoring.coreos.com
+    kind: ServiceMonitor
+    jqPathExpressions:
+    - .spec.endpoints[]?.relabelings[]?.action
