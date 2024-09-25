@@ -14,7 +14,6 @@ spec:
         grafana:
           ingress:
             enabled: true
-            ingressClassName: alb
             annotations:
               cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
             labels: {}
